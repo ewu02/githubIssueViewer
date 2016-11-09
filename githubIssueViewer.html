@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" ng-app="GithubIssueViewerApp">
+<head>
+  <meta charset="utf-8">
+  <title>Github Issue Viewer</title>
+  <link rel="stylesheet" href="http://cdn.jsdelivr.net/foundation/5.5.1/css/foundation.min.css">
+</head>
+<body>
+  <h2>Github Issue Viewer</h2>
+  <div ng-controller="GithubIssueViewerCtrl">
+    <ng-form name="userNameForm">
+      <div class="row">
+        <div class="small-8 small-centered end columns">
+          <div class="row collapse">
+            <div class="small-8 columns">
+              <label ng-class="status.invalidGithubUser && userNameForm.submitted">
+                <input type="text" class="error" ng-model="userNameInput"
+                    ng-required="true" placeholder="Enter Github Account Name">
+              </label>
+              <small ng-show="status.invalidGithubUser &&
+                              userNameForm.submitted" class="error">
+                Cannot acquire repositories. User is possibly invalid
+              </small>
+              <small ng-show="userNameForm.$invalid &&
+                              !status.invalidGithubUser &&
+                              userNameForm.submitted" class="error">
+                Input Required
+              </small>
+            </div>
+            <div class="small-4 columns">
+              <a href="" ng-click="updateUser()" class="button postfix">Get Repositories</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-form>
+
+    <div class="row" ng-show="vals.userRepoDisplayHeading">
+      <div class="small-4 columns">
+        <h4 ng-bind="vals.userRepoDisplayHeading"></h3>
+        <div ng-show="status.acquiringUserRepos" class="panel callout radius">
+          <h5>Loading ...</h5>
+        </div>
+        <ul class="side-nav">
+          <li ng-repeat="repo in vals.repos">
+            <a href="" ng-click="selectRepo(repo.name)" ng-bind="repo.name"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="small-8 columns">
+        <h5 ng-bind="vals.repoIssuesDisplayHeading"></h5>
+        <div ng-show="status.acquiringRepoIssues" class="panel callout radius">
+          <h5>Loading ...</h5>
+        </div>
+        <div ng-show="status.acquiringRepoIssuesError" data-alert class="alert-box alert">
+          Error: Cannot acquire repository issues
+        </div>
+        <ul>
+          <li ng-repeat="issue in vals.issues" ng-if="!issue.pull_request" ng-bind="issue.title"></li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
+  <script src="https://code.angularjs.org/1.2.1/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.2.1/angular-resource.min.js"></script>
+  <script src="./githubIssueViewer.js"></script>
+</body>
+</html>
+
